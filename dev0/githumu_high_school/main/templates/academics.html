@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holiday Assignments - Githumu High School</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-image: linear-gradient(to bottom, #f4f4f4 0%, #e0e0e0 100%);
+        }
+
+        #news {
+            background: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        #news h3 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+
+        .search-form input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            color: #333;
+            width: 100%;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #2c3e50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .search-form button:hover {
+            background-color: #1a252f;
+            transform: scale(1.05);
+        }
+
+        .assignments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .assignments-grid h3 {
+            margin: 0;
+            font-size: 1.2em;
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .assignments-grid h3:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .download-btn {
+            text-decoration: none;
+            color: #2c3e50;
+            transition: color 0.3s, text-shadow 0.3s;
+            display: block;
+            text-align: center;
+        }
+
+        .download-btn:hover {
+            color: #1a252f;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            #news h3 {
+                font-size: 1.5em;
+            }
+
+            .search-form input[type="text"],
+            .search-form button {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            .assignments-grid h3 {
+                font-size: 1em;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #news h3 {
+                font-size: 1.2em;
+            }
+
+            .search-form input[type="text"],
+            .search-form button {
+                font-size: 12px;
+                padding: 6px;
+            }
+
+            .assignments-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .assignments-grid h3 {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Holiday Assignments - Githumu High School{% endblock %}
+
+{% block content %}
+
+<section id="news">
+    <h3>
+        Holiday Assignments 
+        <form action="{% url 'search' %}" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Search..." required>
+            <button type="submit">Search</button>
+        </form>
+    </h3>
+</section>
+
+<div class="assignments-grid"> 
+    {% for item in academics %}
+        <h3>
+            <a href="{% url 'holiday' item.id %}" class="download-btn">
+                Assignments for {{ item.year }}
+            </a>
+        </h3>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+</body>
+</html>

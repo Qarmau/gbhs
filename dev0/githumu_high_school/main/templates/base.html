@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Githumu High School{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #ffd700;
+            --text-color: #333;
+            --background-color: #f8f9fa;
+            --nav-footer-text-color: #fff;
+            --nav-toggle-color: #333; /* Color for the hamburger lines */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            position: relative;
+            background-color: var(--primary-color);
+            padding: 1rem;
+            z-index: 1000; /* Ensure header is on top */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.8em;
+            color: var(--nav-footer-text-color);
+            font-weight: 700;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            position: relative;
+            width: 30px;
+            height: 22px;
+        }
+
+        .nav-toggle .line {
+            display: block;
+            height: 3px;
+            background-color: var(--nav-toggle-color);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            position: absolute;
+            left: 0;
+        }
+
+        .nav-toggle .line1 {
+            top: 0;
+            width: 30px;
+        }
+
+        .nav-toggle .line2 {
+            top: 8px;
+            width: 22px;
+        }
+
+        .nav-toggle .line3 {
+            top: 16px;
+            width: 14px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex: 1; /* Allow the nav-menu to take available space */
+            justify-content: space-evenly; /* Distribute items evenly */
+            align-items: center;
+        }
+
+        .nav-menu li {
+            margin: 0;
+        }
+
+        .nav-menu li a {
+            color: var(--nav-footer-text-color);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu li a:hover {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--primary-color);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                z-index: 1000; /* Ensure menu is above content */
+                padding: 0;
+            }
+
+            .nav-menu.active {
+                transform: translateX(0);
+            }
+
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+
+            .nav-menu li a {
+                font-size: 1.5em;
+            }
+        }
+
+        main {
+            padding-top: 60px; /* Adjust based on header height */
+            position: relative; /* Ensure proper stacking context */
+            z-index: 1; /* Ensure main is below the menu */
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: var(--nav-footer-text-color);
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: var(--nav-footer-text-color);
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            font-size: 1.5em;
+            display: none;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000; /* Ensure back-to-top is on top */
+        }
+
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .back-to-top i {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-logo">Githumu High</div>
+        <button class="nav-toggle" id="navToggle">
+            <span class="line line1"></span>
+            <span class="line line2"></span>
+            <span class="line line3"></span>
+        </button>
+        <ul class="nav-menu">
+            <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="{% url 'administration' %}"><i class="fas fa-users-cog"></i> Administration</a></li>
+            <li><a href="{% url 'teaching_staff' %}"><i class="fas fa-chalkboard-teacher"></i> Teaching Staff</a></li>
+            <li><a href="{% url 'achievements' %}"><i class="fas fa-trophy"></i> Achievements</a></li>
+            <li><a href="{% url 'keys' %}"><i class="fas fa-book"></i> Academics</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                {% endif %}
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <a href="#" class="back-to-top" id="backToTopBtn">TOP
+            <i class="fas fa-arrow-up"></i>
+        </a>
+        <div class="container">
+            <p>&copy; 2024 Githumu High School. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopBtn.style.display = 'block';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+
+            backToTopBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            const navToggle = document.getElementById('navToggle');
+            const navMenu = document.querySelector('.nav-menu');
+
+            navToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+        });
+    </script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
